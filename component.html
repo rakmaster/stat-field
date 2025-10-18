@@ -143,6 +143,108 @@
       padding-bottom: 10px;
       border-bottom: 2px solid #667eea;
     }
+
+    /* Playground Styles */
+    .playground-card {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 60px;
+    }
+
+    .playground-controls {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .control-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .control-input {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .control-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .control-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-checkbox input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .control-checkbox label {
+      font-size: 14px;
+      color: #666;
+      cursor: pointer;
+    }
+
+    .playground-preview {
+      background: #f8f9fa;
+      padding: 32px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .playground-code {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .code-tag {
+      color: #569cd6;
+    }
+
+    .code-attr {
+      color: #9cdcfe;
+    }
+
+    .code-value {
+      color: #ce9178;
+    }
+
+    .code-bool {
+      color: #569cd6;
+    }
   </style>
 </head>
 <body>
@@ -159,8 +261,86 @@
 
   <div id="app">
     <div class="container">
-      <h1>🎲 VStatField Component</h1>
-      <p class="subtitle">Dice-powered stat input for RPG character creation</p>
+      <h1 style="margin-bottom: 8px;">VStatField Component</h1>
+      <p style="opacity: 0.9; margin-bottom: 40px;">Interactive playground - adjust the controls to see live updates</p>
+
+      <!-- Interactive Playground -->
+      <div class="playground-card">
+        <div class="playground-controls">
+          <div class="control-grid">
+            <div class="control-group">
+              <label class="control-label">Die Notation</label>
+              <input v-model="playground.die" class="control-input" placeholder="e.g., 3d6">
+            </div>
+            <div class="control-group">
+              <label class="control-label">Label</label>
+              <input v-model="playground.label" class="control-input" placeholder="e.g., Strength">
+            </div>
+            <div class="control-group">
+              <label class="control-label">Variant</label>
+              <select v-model="playground.variant" class="control-input">
+                <option value="default">Default</option>
+                <option value="compact">Compact</option>
+                <option value="inline">Inline</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Min Value</label>
+              <input v-model.number="playground.min" type="number" class="control-input" placeholder="Optional">
+            </div>
+            <div class="control-group">
+              <label class="control-label">Max Value</label>
+              <input v-model.number="playground.max" type="number" class="control-input" placeholder="Optional">
+            </div>
+          </div>
+          <div class="control-grid" style="margin-top: 16px;">
+            <div class="control-checkbox">
+              <input type="checkbox" id="show-details" v-model="playground.showDetails">
+              <label for="show-details">Show Details</label>
+            </div>
+            <div class="control-checkbox">
+              <input type="checkbox" id="required" v-model="playground.required">
+              <label for="required">Required</label>
+            </div>
+            <div class="control-checkbox">
+              <input type="checkbox" id="disabled" v-model="playground.disabled">
+              <label for="disabled">Disabled</label>
+            </div>
+            <div class="control-checkbox">
+              <input type="checkbox" id="auto-roll" v-model="playground.autoRoll">
+              <label for="auto-roll">Auto-roll</label>
+            </div>
+          </div>
+        </div>
+        <div class="playground-preview">
+          <v-stat-field
+            v-model="playground.value"
+            :die="playground.die"
+            :label="playground.label"
+            :variant="playground.variant"
+            :min="playground.min || undefined"
+            :max="playground.max || undefined"
+            :show-details="playground.showDetails"
+            :required="playground.required"
+            :disabled="playground.disabled"
+            :auto-roll="playground.autoRoll"
+          ></v-stat-field>
+        </div>
+        <div class="playground-code">
+          <span class="code-tag">&lt;v-stat-field</span><br>
+          <span class="code-attr">  v-model</span>=<span class="code-value">"{{ playground.label.toLowerCase() || 'stat' }}"</span><br>
+          <span class="code-attr">  die</span>=<span class="code-value">"{{ playground.die }}"</span><br>
+          <span class="code-attr" v-if="playground.label">  label</span>=<span class="code-value" v-if="playground.label">"{{ playground.label }}"</span><br v-if="playground.label">
+          <span class="code-attr" v-if="playground.variant !== 'default'">  variant</span>=<span class="code-value" v-if="playground.variant !== 'default'">"{{ playground.variant }}"</span><br v-if="playground.variant !== 'default'">
+          <span class="code-attr" v-if="playground.min">  :min</span>=<span class="code-value" v-if="playground.min">"{{ playground.min }}"</span><br v-if="playground.min">
+          <span class="code-attr" v-if="playground.max">  :max</span>=<span class="code-value" v-if="playground.max">"{{ playground.max }}"</span><br v-if="playground.max">
+          <span class="code-attr" v-if="playground.showDetails">  show-details</span><br v-if="playground.showDetails">
+          <span class="code-attr" v-if="playground.required">  required</span><br v-if="playground.required">
+          <span class="code-attr" v-if="playground.disabled">  disabled</span><br v-if="playground.disabled">
+          <span class="code-attr" v-if="playground.autoRoll">  auto-roll</span><br v-if="playground.autoRoll">
+          <span class="code-tag">/&gt;</span>
+        </div>
+      </div>
 
       <h2 class="section-header">Basic Configurations</h2>
       <div class="demo-grid">
@@ -761,6 +941,19 @@
       },
       data() {
         return {
+          // Playground state
+          playground: {
+            value: null,
+            die: '3d6',
+            label: 'Strength',
+            variant: 'default',
+            min: 3,
+            max: 18,
+            showDetails: true,
+            required: false,
+            disabled: false,
+            autoRoll: false
+          },
           // Basic examples
           basic: null,
           validated: null,
