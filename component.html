@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VStatField Component - Dice-Powered Stat Input</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    nav {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px 0;
+      margin-bottom: 40px;
+    }
+
+    nav .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    nav .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    nav a {
+      color: #666;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #667eea;
+    }
+
+    nav .btn-primary {
+      background: #667eea;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 6px;
+    }
+
+    nav .btn-primary:hover {
+      background: #5568d3;
+      color: white;
+    }
+  </style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 2em;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 1em;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .demo-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .demo-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .demo-description {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .code-block {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 16px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+      color: #333;
+      overflow-x: auto;
+    }
+
+    .props-list {
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 16px;
+      font-size: 12px;
+    }
+
+    .props-list code {
+      background: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #667eea;
+      font-family: 'Monaco', 'Courier New', monospace;
+    }
+
+    .section-header {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin: 40px 0 20px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="index.html" class="logo">🎲 StatField</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="component.html">Component Docs</a>
+        <a href="https://github.com/rakmaster/stat-field" target="_blank">GitHub</a>
+        <a href="https://www.npmjs.com/package/@stat-field/vue" target="_blank" class="btn-primary">npm</a>
+      </div>
+    </div>
+  </nav>
+
+  <div id="app">
+    <div class="container">
+      <h1>🎲 VStatField Component</h1>
+      <p class="subtitle">Dice-powered stat input for RPG character creation</p>
+
+      <h2 class="section-header">Basic Configurations</h2>
+      <div class="demo-grid">
+        <!-- Default -->
+        <div class="demo-card">
+          <div class="demo-title">Default</div>
+          <div class="demo-description">
+            Standard stat field with label and dice button. Values come from dice rolls only.
+          </div>
+          <v-stat-field v-model="basic" die="3d6" label="Strength"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field v-model="strength" die="3d6" label="Strength" /&gt;</div>
+        </div>
+
+        <!-- With Validation -->
+        <div class="demo-card">
+          <div class="demo-title">With Validation</div>
+          <div class="demo-description">
+            Enforce min/max ranges. Invalid rolls show error messages.
+          </div>
+          <v-stat-field v-model="validated" die="3d6" label="Constitution" :min="3" :max="18"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="3d6" :min="3" :max="18" /&gt;</div>
+        </div>
+
+        <!-- Show Details -->
+        <div class="demo-card">
+          <div class="demo-title">Show Roll Details</div>
+          <div class="demo-description">
+            Display individual die results and modifiers below the input.
+          </div>
+          <v-stat-field v-model="details" die="3d6" label="Intelligence" show-details></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="3d6" show-details /&gt;</div>
+        </div>
+      </div>
+
+      <h2 class="section-header">Dice Types</h2>
+      <div class="demo-grid">
+        <!-- d4 -->
+        <div class="demo-card">
+          <div class="demo-title">d4 - Tetrahedron 🔺</div>
+          <div class="demo-description">
+            Four-sided die for small damage rolls.
+          </div>
+          <v-stat-field v-model="d4" die="1d4" label="Dagger Damage"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="1d4" /&gt;</div>
+        </div>
+
+        <!-- d6 -->
+        <div class="demo-card">
+          <div class="demo-title">d6 - Cube ⚄</div>
+          <div class="demo-description">
+            Six-sided die, most common in RPGs.
+          </div>
+          <v-stat-field v-model="d6" die="2d6" label="Shortsword Damage"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="2d6" /&gt;</div>
+        </div>
+
+        <!-- d8 -->
+        <div class="demo-card">
+          <div class="demo-title">d8 - Octahedron 🔷</div>
+          <div class="demo-description">
+            Eight-sided die for medium damage.
+          </div>
+          <v-stat-field v-model="d8" die="1d8" label="Longsword Damage"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="1d8" /&gt;</div>
+        </div>
+
+        <!-- d10 -->
+        <div class="demo-card">
+          <div class="demo-title">d10 - Decahedron 🔟</div>
+          <div class="demo-description">
+            Ten-sided die for percentile systems.
+          </div>
+          <v-stat-field v-model="d10" die="1d10" label="Heavy Weapon"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="1d10" /&gt;</div>
+        </div>
+
+        <!-- d12 -->
+        <div class="demo-card">
+          <div class="demo-title">d12 - Dodecahedron 🌟</div>
+          <div class="demo-description">
+            Twelve-sided die for high damage.
+          </div>
+          <v-stat-field v-model="d12" die="1d12" label="Greataxe Damage"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="1d12" /&gt;</div>
+        </div>
+
+        <!-- d20 -->
+        <div class="demo-card">
+          <div class="demo-title">d20 - Icosahedron 🎲</div>
+          <div class="demo-description">
+            Twenty-sided die for skill checks.
+          </div>
+          <v-stat-field v-model="d20" die="1d20" label="Initiative"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="1d20" /&gt;</div>
+        </div>
+
+        <!-- d100 -->
+        <div class="demo-card">
+          <div class="demo-title">d100 - Percentile 💯</div>
+          <div class="demo-description">
+            Hundred-sided for percentile rolls.
+          </div>
+          <v-stat-field v-model="d100" die="1d100" label="Percentile"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="1d100" /&gt;</div>
+        </div>
+      </div>
+
+      <h2 class="section-header">Modifiers</h2>
+      <div class="demo-grid">
+        <!-- Positive Modifier -->
+        <div class="demo-card">
+          <div class="demo-title">Positive Modifier</div>
+          <div class="demo-description">
+            Add a bonus to the roll result.
+          </div>
+          <v-stat-field v-model="plusMod" die="1d8+3" label="Damage +3" show-details></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="1d8+3" show-details /&gt;</div>
+        </div>
+
+        <!-- Negative Modifier -->
+        <div class="demo-card">
+          <div class="demo-title">Negative Modifier</div>
+          <div class="demo-description">
+            Subtract a penalty from the result.
+          </div>
+          <v-stat-field v-model="minusMod" die="2d6-1" label="Damage -1" show-details></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="2d6-1" show-details /&gt;</div>
+        </div>
+
+        <!-- Large Modifier -->
+        <div class="demo-card">
+          <div class="demo-title">Multiple Dice + Modifier</div>
+          <div class="demo-description">
+            Roll multiple dice with significant bonus.
+          </div>
+          <v-stat-field v-model="largeMod" die="4d6+5" label="Hit Points" show-details></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="4d6+5" show-details /&gt;</div>
+        </div>
+      </div>
+
+      <h2 class="section-header">Variants</h2>
+      <div class="demo-grid">
+        <!-- Default Variant -->
+        <div class="demo-card">
+          <div class="demo-title">Default Variant</div>
+          <div class="demo-description">
+            Standard spacing and sizing.
+          </div>
+          <v-stat-field v-model="varDefault" die="3d6" label="Wisdom" variant="default"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field variant="default" /&gt;</div>
+        </div>
+
+        <!-- Compact Variant -->
+        <div class="demo-card">
+          <div class="demo-title">Compact Variant</div>
+          <div class="demo-description">
+            Smaller padding and font sizes for tight spaces.
+          </div>
+          <v-stat-field v-model="varCompact" die="3d6" label="Charisma" variant="compact"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field variant="compact" /&gt;</div>
+        </div>
+
+        <!-- Inline Variant -->
+        <div class="demo-card">
+          <div class="demo-title">Inline Variant</div>
+          <div class="demo-description">
+            Horizontal layout for embedding in text.
+          </div>
+          <v-stat-field v-model="varInline" die="1d20" label="Initiative" variant="inline"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field variant="inline" /&gt;</div>
+        </div>
+      </div>
+
+      <h2 class="section-header">Additional Features</h2>
+      <div class="demo-grid">
+        <!-- Required -->
+        <div class="demo-card">
+          <div class="demo-title">Required Field</div>
+          <div class="demo-description">
+            Mark field as required with asterisk indicator.
+          </div>
+          <v-stat-field v-model="required" die="3d6" label="Strength" required></v-stat-field>
+          <div class="code-block">&lt;v-stat-field required /&gt;</div>
+        </div>
+
+        <!-- With Hint -->
+        <div class="demo-card">
+          <div class="demo-title">With Hint Text</div>
+          <div class="demo-description">
+            Add helper text below the input field.
+          </div>
+          <v-stat-field v-model="hint" die="1d10+5" label="Hit Points" hint="Roll for starting HP"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field hint="Roll for starting HP" /&gt;</div>
+        </div>
+
+        <!-- Auto-roll -->
+        <div class="demo-card">
+          <div class="demo-title">Auto-roll on Mount</div>
+          <div class="demo-description">
+            Automatically roll when component mounts.
+          </div>
+          <v-stat-field v-model="autoRoll" die="3d6" label="Auto Strength" auto-roll></v-stat-field>
+          <div class="code-block">&lt;v-stat-field auto-roll /&gt;</div>
+        </div>
+
+        <!-- Disabled -->
+        <div class="demo-card">
+          <div class="demo-title">Disabled State</div>
+          <div class="demo-description">
+            Prevent interaction with the field.
+          </div>
+          <v-stat-field v-model="disabled" die="3d6" label="Locked Stat" disabled></v-stat-field>
+          <div class="code-block">&lt;v-stat-field disabled /&gt;</div>
+        </div>
+      </div>
+
+      <h2 class="section-header">Available Props</h2>
+      <div class="demo-card">
+        <div class="props-list">
+          <strong>Value:</strong><br>
+          <code>v-model</code> - Bind to the stat value (Number | null)<br><br>
+
+          <strong>Dice Configuration:</strong><br>
+          <code>die</code> - Dice notation (required, e.g., "3d6", "1d20+5")<br><br>
+
+          <strong>Input Configuration:</strong><br>
+          <code>label</code> - Label text above input<br>
+          <code>placeholder</code> - Placeholder text<br>
+          <code>hint</code> - Helper text below input<br>
+          <code>hide-roll-button</code> - Hide the dice button<br><br>
+
+          <strong>Validation:</strong><br>
+          <code>min</code> - Minimum allowed value<br>
+          <code>max</code> - Maximum allowed value<br>
+          <code>required</code> - Mark as required (shows *)<br>
+          <code>rules</code> - Array of validation functions<br><br>
+
+          <strong>Display:</strong><br>
+          <code>show-details</code> - Show roll breakdown<br><br>
+
+          <strong>Styling:</strong><br>
+          <code>variant</code> - "default", "compact", or "inline"<br><br>
+
+          <strong>State:</strong><br>
+          <code>disabled</code> - Disable the field<br>
+          <code>loading</code> - Show loading state<br><br>
+
+          <strong>Behavior:</strong><br>
+          <code>auto-roll</code> - Auto-roll on mount<br>
+          <code>seed</code> - Seed for deterministic rolls
+        </div>
+      </div>
+
+      <h2 class="section-header">Available Events</h2>
+      <div class="demo-card">
+        <div class="props-list">
+          <code>@update:modelValue</code> - Value changed<br>
+          <code>@roll</code> - Dice were rolled (returns RollResult)<br>
+          <code>@input</code> - Value changed (Vuetify-style)<br>
+          <code>@change</code> - Value changed after roll completes<br>
+          <code>@focus</code> - Input gained focus<br>
+          <code>@blur</code> - Input lost focus<br>
+          <code>@click</code> - Input was clicked<br>
+          <code>@click:append</code> - Roll button was clicked<br>
+          <code>@error</code> - Roll error occurred<br>
+          <code>@validation-error</code> - Validation failed
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    const { createApp } = Vue;
+
+    // Inline dice roller core (same as before)
+    const DIE_TYPES = [4, 6, 8, 10, 12, 20, 100];
+    const MIN_DICE_COUNT = 1;
+    const MAX_DICE_COUNT = 100;
+    const DICE_NOTATION_REGEX = /^(\d+)d(\d+)([+-]\d+)?$/i;
+
+    function createSeededRandom(seed) {
+      let state = seed;
+      return function() {
+        state = (state + 0x6D2B79F5) | 0;
+        let t = Math.imul(state ^ (state >>> 15), state | 1);
+        t = (t + Math.imul(t ^ (t >>> 7), t | 61)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function randomInt(min, max, rng = Math.random) {
+      return Math.floor(rng() * (max - min + 1)) + min;
+    }
+
+    function parseDiceNotation(notation) {
+      const trimmed = notation.trim();
+      const match = DICE_NOTATION_REGEX.exec(trimmed);
+      
+      if (!match) {
+        throw new Error(`Invalid dice notation "${notation}": format must be XdY or XdY±Z`);
+      }
+      
+      const count = parseInt(match[1], 10);
+      const sides = parseInt(match[2], 10);
+      const modifier = match[3] ? parseInt(match[3], 10) : 0;
+      
+      if (count < MIN_DICE_COUNT || count > MAX_DICE_COUNT) {
+        throw new Error(`Invalid dice count ${count}: must be between 1 and 100`);
+      }
+      
+      if (!DIE_TYPES.includes(sides)) {
+        throw new Error(`Invalid die type d${sides}: must be d4, d6, d8, d10, d12, d20, or d100`);
+      }
+      
+      return { count, sides, modifier };
+    }
+
+    function rollDetailed(notation, options = {}) {
+      const parsed = parseDiceNotation(notation);
+      const rng = options.seed !== undefined 
+        ? createSeededRandom(options.seed)
+        : Math.random;
+      
+      const rolls = [];
+      for (let i = 0; i < parsed.count; i++) {
+        rolls.push(randomInt(1, parsed.sides, rng));
+      }
+      
+      const total = rolls.reduce((sum, roll) => sum + roll, 0) + parsed.modifier;
+      
+      return {
+        rolls,
+        modifier: parsed.modifier,
+        total,
+        notation: notation.trim(),
+      };
+    }
+
+    // VStatField component
+    const VStatField = {
+      template: `
+        <div class="v-stat-field" :class="variantClass">
+          <label v-if="label" class="stat-label">
+            {{ label }}
+            <span v-if="required" class="required-indicator">*</span>
+          </label>
+          <div class="stat-input-group">
+            <input
+              type="number"
+              :value="modelValue"
+              :placeholder="placeholder"
+              :min="min"
+              :max="max"
+              :disabled="disabled"
+              readonly
+              class="stat-input"
+              @focus="$emit('focus', $event)"
+              @blur="$emit('blur', $event)"
+              @click="$emit('click', $event)"
+            />
+            <button
+              v-if="!hideRollButton"
+              @click="handleRollClick"
+              :disabled="disabled || loading"
+              class="stat-roll-btn"
+              type="button"
+            >
+              <span v-if="loading">⏳</span>
+              <span v-else>{{ diceIcons }}</span>
+            </button>
+          </div>
+          <div v-if="hint && !error" class="stat-hint">{{ hint }}</div>
+          <div v-if="error" class="stat-error">{{ error }}</div>
+          <div v-if="showDetails && lastRoll" class="stat-details">
+            {{ die }}: [{{ lastRoll.rolls.join(', ') }}]
+            <span v-if="lastRoll.modifier !== 0">
+              {{ lastRoll.modifier > 0 ? '+' : '' }}{{ lastRoll.modifier }}
+            </span>
+            = {{ lastRoll.total }}
+          </div>
+        </div>
+      `,
+      props: {
+        modelValue: { type: [Number, null], default: null },
+        die: { type: String, required: true },
+        label: { type: String, default: '' },
+        placeholder: { type: String, default: '' },
+        hint: { type: String, default: '' },
+        hideRollButton: { type: Boolean, default: false },
+        min: { type: Number, default: undefined },
+        max: { type: Number, default: undefined },
+        required: { type: Boolean, default: false },
+        showDetails: { type: Boolean, default: false },
+        variant: { type: String, default: 'default' },
+        disabled: { type: Boolean, default: false },
+        loading: { type: Boolean, default: false },
+        autoRoll: { type: Boolean, default: false },
+        seed: { type: Number, default: undefined }
+      },
+      emits: ['update:modelValue', 'roll', 'input', 'change', 'focus', 'blur', 'click', 'click:append', 'error', 'validation-error'],
+      data() {
+        return {
+          error: null,
+          lastRoll: null
+        };
+      },
+      computed: {
+        variantClass() {
+          return `variant-${this.variant}`;
+        },
+        diceIcons() {
+          const match = this.die.match(/^(\d+)d(\d+)/);
+          if (!match) return '🎲';
+          
+          const count = parseInt(match[1]);
+          const sides = parseInt(match[2]);
+          
+          const dieEmoji = {
+            4: '🔺', 6: '⚄', 8: '🔷', 10: '🔟',
+            12: '🌟', 20: '🎲', 100: '💯'
+          };
+          
+          const icon = dieEmoji[sides] || '🎲';
+          return icon.repeat(Math.min(count, 3)) + (count > 3 ? '…' : '');
+        }
+      },
+      methods: {
+        handleRoll() {
+          try {
+            this.error = null;
+            const result = rollDetailed(this.die);
+            this.lastRoll = result;
+            
+            if (this.min !== undefined && result.total < this.min) {
+              this.error = `Value must be at least ${this.min}`;
+              this.$emit('validation-error', this.error);
+            } else if (this.max !== undefined && result.total > this.max) {
+              this.error = `Value must be at most ${this.max}`;
+              this.$emit('validation-error', this.error);
+            } else {
+              this.$emit('change', result.total);
+            }
+            
+            this.$emit('update:modelValue', result.total);
+            this.$emit('input', result.total);
+            this.$emit('roll', result);
+          } catch (err) {
+            this.error = err.message;
+            this.$emit('error', err);
+          }
+        },
+        handleRollClick(event) {
+          this.$emit('click:append', event);
+          this.handleRoll();
+        }
+      },
+      mounted() {
+        if (this.autoRoll) {
+          this.handleRoll();
+        }
+      }
+    };
+
+    // Add styles
+    const style = document.createElement('style');
+    style.textContent = `
+      .v-stat-field {
+        --stat-primary-color: #667eea;
+        --stat-primary-hover: #5568d3;
+        --stat-error-color: #ff4757;
+        --stat-border-color: #ddd;
+        --stat-border-radius: 4px;
+        --stat-text-color: #333;
+        --stat-bg-color: white;
+        --stat-label-color: #666;
+        --stat-hint-color: #999;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        margin-bottom: 16px;
+      }
+      .stat-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--stat-label-color);
+        margin-bottom: 6px;
+      }
+      .required-indicator {
+        color: var(--stat-error-color);
+        margin-left: 2px;
+      }
+      .stat-input-group {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+      }
+      .stat-input {
+        flex: 1;
+        padding: 10px 12px;
+        border: 2px solid var(--stat-border-color);
+        border-radius: var(--stat-border-radius);
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--stat-text-color);
+        background: var(--stat-bg-color);
+        transition: border-color 0.2s, box-shadow 0.2s;
+        cursor: default;
+        text-align: center;
+      }
+      .stat-input:focus {
+        outline: none;
+        border-color: var(--stat-primary-color);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+      .stat-input:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: #f5f5f5;
+      }
+      .stat-input::-webkit-inner-spin-button,
+      .stat-input::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .stat-input[type=number] {
+        -moz-appearance: textfield;
+      }
+      .stat-roll-btn {
+        padding: 10px 16px;
+        background: var(--stat-primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--stat-border-radius);
+        font-size: 18px;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+        white-space: nowrap;
+        min-width: 48px;
+      }
+      .stat-roll-btn:hover:not(:disabled) {
+        background: var(--stat-primary-hover);
+        transform: translateY(-1px);
+      }
+      .stat-roll-btn:active:not(:disabled) {
+        transform: translateY(0);
+      }
+      .stat-roll-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .stat-hint {
+        font-size: 12px;
+        color: var(--stat-hint-color);
+        margin-top: 4px;
+      }
+      .stat-error {
+        font-size: 12px;
+        color: var(--stat-error-color);
+        margin-top: 4px;
+        font-weight: 500;
+      }
+      .stat-details {
+        font-size: 12px;
+        color: var(--stat-hint-color);
+        margin-top: 4px;
+        font-family: 'Courier New', monospace;
+      }
+      .variant-compact {
+        margin-bottom: 12px;
+      }
+      .variant-compact .stat-input {
+        padding: 8px 10px;
+        font-size: 14px;
+      }
+      .variant-compact .stat-roll-btn {
+        padding: 8px 12px;
+        font-size: 16px;
+        min-width: 40px;
+      }
+      .variant-inline .stat-label {
+        display: inline-block;
+        margin-right: 12px;
+        margin-bottom: 0;
+      }
+      .variant-inline .stat-input-group {
+        display: inline-flex;
+      }
+      .variant-inline {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 0;
+      }
+    `;
+    document.head.appendChild(style);
+
+    createApp({
+      components: {
+        'v-stat-field': VStatField
+      },
+      data() {
+        return {
+          // Basic examples
+          basic: null,
+          validated: null,
+          details: null,
+          // Dice types
+          d4: null, d6: null, d8: null, d10: null, d12: null, d20: null, d100: null,
+          // Modifiers
+          plusMod: null, minusMod: null, largeMod: null,
+          // Variants
+          varDefault: null, varCompact: null, varInline: null,
+          // Features
+          required: null, hint: null, autoRoll: null, disabled: 15
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
