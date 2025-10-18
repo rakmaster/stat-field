@@ -2,6 +2,8 @@
 
 Vue component for RPG character stat generation with dice rolling. Perfect for D&D, Pathfinder, and any tabletop RPG character creation.
 
+**[📚 View Documentation](https://rakmaster.github.io/stat-field/)** | **[🎮 Interactive Playground](https://rakmaster.github.io/stat-field/component.html)**
+
 ## ✨ Features
 
 - 🎲 **Dice-only input** - Values come from dice rolls, not manual entry
