@@ -6,14 +6,14 @@
   <title>VStatField Component - Dice-Powered Stat Input</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <style>
-    nav {
+    .navbar {
       background: white;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 15px 0;
       margin-bottom: 40px;
     }
 
-    nav .container {
+    .nav-container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
@@ -22,40 +22,31 @@
       align-items: center;
     }
 
-    nav .logo {
+    .nav-brand {
       font-size: 20px;
       font-weight: bold;
       color: #667eea;
-      text-decoration: none;
     }
 
-    nav .nav-links {
+    .nav-links {
       display: flex;
       gap: 30px;
       align-items: center;
     }
 
-    nav a {
+    .nav-links a {
       color: #666;
       text-decoration: none;
       font-weight: 500;
       transition: color 0.2s;
     }
 
-    nav a:hover {
+    .nav-links a:hover {
       color: #667eea;
     }
 
-    nav .btn-primary {
-      background: #667eea;
-      color: white;
-      padding: 8px 20px;
-      border-radius: 6px;
-    }
-
-    nav .btn-primary:hover {
-      background: #5568d3;
-      color: white;
+    .nav-links a.active {
+      color: #667eea;
     }
   </style>
   <style>
@@ -155,14 +146,13 @@
   </style>
 </head>
 <body>
-  <nav>
-    <div class="container">
-      <a href="index.html" class="logo">🎲 StatField</a>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">🎲 StatField</div>
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="component.html">Component Docs</a>
+        <a href="component.html" class="active">Component</a>
         <a href="https://github.com/rakmaster/stat-field" target="_blank">GitHub</a>
-        <a href="https://www.npmjs.com/package/@stat-field/vue" target="_blank" class="btn-primary">npm</a>
       </div>
     </div>
   </nav>
