@@ -213,184 +213,165 @@
         </div>
       </div>
 
-      <h2 class="section-header">Display Options</h2>
+      <h2 class="section-header">Modifiers</h2>
       <div class="demo-grid">
-        <!-- Small Result -->
+        <!-- Positive Modifier -->
         <div class="demo-card">
-          <div class="demo-title">Small Result</div>
+          <div class="demo-title">Positive Modifier</div>
           <div class="demo-description">
-            Smaller result display for inline use.
+            Add a bonus to the roll result.
           </div>
-          <v-dice-roller notation="1d6" result-size="small"></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller result-size="small" /&gt;</div>
+          <v-stat-field v-model="plusMod" die="1d8+3" label="Damage +3" show-details></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="1d8+3" show-details /&gt;</div>
         </div>
 
-        <!-- Large Result -->
+        <!-- Negative Modifier -->
         <div class="demo-card">
-          <div class="demo-title">Large Result</div>
+          <div class="demo-title">Negative Modifier</div>
           <div class="demo-description">
-            Bigger, more dramatic result display.
+            Subtract a penalty from the result.
           </div>
-          <v-dice-roller notation="1d20" result-size="large"></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller result-size="large" /&gt;</div>
+          <v-stat-field v-model="minusMod" die="2d6-1" label="Damage -1" show-details></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="2d6-1" show-details /&gt;</div>
         </div>
 
-        <!-- No Details -->
+        <!-- Large Modifier -->
         <div class="demo-card">
-          <div class="demo-title">No Details</div>
+          <div class="demo-title">Multiple Dice + Modifier</div>
           <div class="demo-description">
-            Hide individual roll breakdown, just show total.
+            Roll multiple dice with significant bonus.
           </div>
-          <v-dice-roller notation="3d6+3" :show-details="false"></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller :show-details="false" /&gt;</div>
-        </div>
-
-        <!-- Breakdown Format -->
-        <div class="demo-card">
-          <div class="demo-title">Breakdown Format</div>
-          <div class="demo-description">
-            Show individual dice as separate badges.
-          </div>
-          <v-dice-roller notation="4d6" detail-format="breakdown"></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller detail-format="breakdown" /&gt;</div>
+          <v-stat-field v-model="largeMod" die="4d6+5" label="Hit Points" show-details></v-stat-field>
+          <div class="code-block">&lt;v-stat-field die="4d6+5" show-details /&gt;</div>
         </div>
       </div>
 
-      <h2 class="section-header">History & Presets</h2>
+      <h2 class="section-header">Variants</h2>
       <div class="demo-grid">
-        <!-- With History -->
+        <!-- Default Variant -->
         <div class="demo-card">
-          <div class="demo-title">With History</div>
+          <div class="demo-title">Default Variant</div>
           <div class="demo-description">
-            Track recent rolls with history display.
+            Standard spacing and sizing.
           </div>
-          <v-dice-roller 
-            notation="2d6" 
-            :show-history="true"
-            :show-clear-history="true"
-          ></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller :show-history="true" /&gt;</div>
+          <v-stat-field v-model="varDefault" die="3d6" label="Wisdom" variant="default"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field variant="default" /&gt;</div>
         </div>
 
-        <!-- With Presets -->
+        <!-- Compact Variant -->
         <div class="demo-card">
-          <div class="demo-title">With Preset Buttons</div>
+          <div class="demo-title">Compact Variant</div>
           <div class="demo-description">
-            Quick access buttons for common dice rolls.
+            Smaller padding and font sizes for tight spaces.
           </div>
-          <v-dice-roller 
-            notation="1d20" 
-            :show-presets="true"
-          ></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller :show-presets="true" /&gt;</div>
-        </div>
-
-        <!-- No History Button -->
-        <div class="demo-card">
-          <div class="demo-title">History Without Clear</div>
-          <div class="demo-description">
-            Show history but hide the clear button.
-          </div>
-          <v-dice-roller 
-            notation="1d6" 
-            :show-history="true"
-            :show-clear-history="false"
-          ></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller :show-history="true" :show-clear-history="false" /&gt;</div>
-        </div>
-      </div>
-
-      <h2 class="section-header">Minimal Configurations</h2>
-      <div class="demo-grid">
-        <!-- Ultra Minimal -->
-        <div class="demo-card">
-          <div class="demo-title">Ultra Minimal</div>
-          <div class="demo-description">
-            Just dropdown and result. Perfect for tight spaces.
-          </div>
-          <v-dice-roller 
-            input-type="select"
-            notation="1d20"
-            :hide-roll-button="true"
-            :auto-roll="true"
-            :minimal="true"
-            result-size="small"
-          ></v-dice-roller>
-          <div class="code-block">
-&lt;v-dice-roller 
-  input-type="select"
-  :hide-roll-button="true"
-  :auto-roll="true"
-  :minimal="true"
-  result-size="small"
-/&gt;
-          </div>
+          <v-stat-field v-model="varCompact" die="3d6" label="Charisma" variant="compact"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field variant="compact" /&gt;</div>
         </div>
 
         <!-- Inline Variant -->
         <div class="demo-card">
           <div class="demo-title">Inline Variant</div>
           <div class="demo-description">
-            Horizontal layout for embedding in text or toolbars.
+            Horizontal layout for embedding in text.
           </div>
-          <v-dice-roller 
-            notation="1d6"
-            variant="inline"
-            input-type="combo"
-            :show-details="false"
-          ></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller variant="inline" /&gt;</div>
+          <v-stat-field v-model="varInline" die="1d20" label="Initiative" variant="inline"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field variant="inline" /&gt;</div>
+        </div>
+      </div>
+
+      <h2 class="section-header">Additional Features</h2>
+      <div class="demo-grid">
+        <!-- Required -->
+        <div class="demo-card">
+          <div class="demo-title">Required Field</div>
+          <div class="demo-description">
+            Mark field as required with asterisk indicator.
+          </div>
+          <v-stat-field v-model="required" die="3d6" label="Strength" required></v-stat-field>
+          <div class="code-block">&lt;v-stat-field required /&gt;</div>
         </div>
 
-        <!-- No Input (Programmatic) -->
+        <!-- With Hint -->
         <div class="demo-card">
-          <div class="demo-title">No Input (API Only)</div>
+          <div class="demo-title">With Hint Text</div>
           <div class="demo-description">
-            Hide input, control via parent component.
+            Add helper text below the input field.
           </div>
-          <v-dice-roller 
-            notation="2d6+3"
-            :hide-input="true"
-            :auto-roll="true"
-          ></v-dice-roller>
-          <div class="code-block">&lt;v-dice-roller :hide-input="true" :auto-roll="true" /&gt;</div>
+          <v-stat-field v-model="hint" die="1d10+5" label="Hit Points" hint="Roll for starting HP"></v-stat-field>
+          <div class="code-block">&lt;v-stat-field hint="Roll for starting HP" /&gt;</div>
+        </div>
+
+        <!-- Auto-roll -->
+        <div class="demo-card">
+          <div class="demo-title">Auto-roll on Mount</div>
+          <div class="demo-description">
+            Automatically roll when component mounts.
+          </div>
+          <v-stat-field v-model="autoRoll" die="3d6" label="Auto Strength" auto-roll></v-stat-field>
+          <div class="code-block">&lt;v-stat-field auto-roll /&gt;</div>
+        </div>
+
+        <!-- Disabled -->
+        <div class="demo-card">
+          <div class="demo-title">Disabled State</div>
+          <div class="demo-description">
+            Prevent interaction with the field.
+          </div>
+          <v-stat-field v-model="disabled" die="3d6" label="Locked Stat" disabled></v-stat-field>
+          <div class="code-block">&lt;v-stat-field disabled /&gt;</div>
         </div>
       </div>
 
       <h2 class="section-header">Available Props</h2>
       <div class="demo-card">
         <div class="props-list">
+          <strong>Value:</strong><br>
+          <code>v-model</code> - Bind to the stat value (Number | null)<br><br>
+
+          <strong>Dice Configuration:</strong><br>
+          <code>die</code> - Dice notation (required, e.g., "3d6", "1d20+5")<br><br>
+
           <strong>Input Configuration:</strong><br>
-          <code>notation</code> - Initial dice notation (default: "2d6")<br>
-          <code>input-type</code> - "text", "select", or "combo" (default: "text")<br>
-          <code>placeholder</code> - Input placeholder text<br>
-          <code>hide-input</code> - Hide input controls<br>
-          <code>hide-roll-button</code> - Hide the roll button<br>
-          <code>roll-button-text</code> - Custom button text (default: "🎲")<br>
-          <code>auto-roll</code> - Auto-roll on mount/change<br><br>
+          <code>label</code> - Label text above input<br>
+          <code>placeholder</code> - Placeholder text<br>
+          <code>hint</code> - Helper text below input<br>
+          <code>hide-roll-button</code> - Hide the dice button<br><br>
 
-          <strong>Presets:</strong><br>
-          <code>show-presets</code> - Show quick roll buttons<br>
-          <code>presets</code> - Array of preset notations<br><br>
+          <strong>Validation:</strong><br>
+          <code>min</code> - Minimum allowed value<br>
+          <code>max</code> - Maximum allowed value<br>
+          <code>required</code> - Mark as required (shows *)<br>
+          <code>rules</code> - Array of validation functions<br><br>
 
-          <strong>Result Display:</strong><br>
-          <code>show-details</code> - Show individual roll breakdown<br>
-          <code>detail-format</code> - "inline", "breakdown", or "simple"<br>
-          <code>result-size</code> - "small", "medium", or "large"<br>
-          <code>minimal</code> - Hide notation label<br><br>
-
-          <strong>History:</strong><br>
-          <code>show-history</code> - Display roll history<br>
-          <code>show-clear-history</code> - Show clear button<br>
-          <code>history-limit</code> - Max history items (default: 10)<br>
-          <code>history-title</code> - History section title<br>
-          <code>clear-history-text</code> - Clear button text<br><br>
+          <strong>Display:</strong><br>
+          <code>show-details</code> - Show roll breakdown<br><br>
 
           <strong>Styling:</strong><br>
           <code>variant</code> - "default", "compact", or "inline"<br><br>
 
+          <strong>State:</strong><br>
+          <code>disabled</code> - Disable the field<br>
+          <code>loading</code> - Show loading state<br><br>
+
           <strong>Behavior:</strong><br>
+          <code>auto-roll</code> - Auto-roll on mount<br>
           <code>seed</code> - Seed for deterministic rolls
+        </div>
+      </div>
+
+      <h2 class="section-header">Available Events</h2>
+      <div class="demo-card">
+        <div class="props-list">
+          <code>@update:modelValue</code> - Value changed<br>
+          <code>@roll</code> - Dice were rolled (returns RollResult)<br>
+          <code>@input</code> - Value changed (Vuetify-style)<br>
+          <code>@change</code> - Value changed after roll completes<br>
+          <code>@focus</code> - Input gained focus<br>
+          <code>@blur</code> - Input lost focus<br>
+          <code>@click</code> - Input was clicked<br>
+          <code>@click:append</code> - Roll button was clicked<br>
+          <code>@error</code> - Roll error occurred<br>
+          <code>@validation-error</code> - Validation failed
         </div>
       </div>
     </div>
@@ -463,8 +444,8 @@
       };
     }
 
-    // Import the component template
-    const VDiceRollerComponent = {
+    // VStatField component
+    const VStatField = {
       template: `
         <div class="v-dice-roller" :class="variantClass">
           <div v-if="!hideInput" class="dice-input-group">
@@ -694,7 +675,23 @@
 
     createApp({
       components: {
-        'v-dice-roller': VDiceRollerComponent
+        'v-stat-field': VStatField
+      },
+      data() {
+        return {
+          // Basic examples
+          basic: null,
+          validated: null,
+          details: null,
+          // Dice types
+          d4: null, d6: null, d8: null, d10: null, d12: null, d20: null, d100: null,
+          // Modifiers
+          plusMod: null, minusMod: null, largeMod: null,
+          // Variants
+          varDefault: null, varCompact: null, varInline: null,
+          // Features
+          required: null, hint: null, autoRoll: null, disabled: 15
+        };
       }
     }).mount('#app');
   </script>
