@@ -59,6 +59,11 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background: #f5f7fa;
+      padding: 0;
+      margin: 0;
+    }
+
+    #app {
       padding: 40px 20px;
     }
 
@@ -260,12 +265,13 @@
   </nav>
 
   <div id="app">
-    <div class="container">
-      <h1 style="margin-bottom: 8px;">VStatField Component</h1>
-      <p style="opacity: 0.9; margin-bottom: 40px;">Interactive playground - adjust the controls to see live updates</p>
+    <section style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 60px 20px; margin: -40px -20px 40px -20px;">
+      <div class="container">
+        <h1 style="margin-bottom: 8px; color: white;">VStatField Component</h1>
+        <p style="opacity: 0.9; margin-bottom: 40px; color: white;">Interactive playground - adjust the controls to see live updates</p>
 
-      <!-- Interactive Playground -->
-      <div class="playground-card">
+        <!-- Interactive Playground -->
+        <div class="playground-card">
         <div class="playground-controls">
           <div class="control-grid">
             <div class="control-group">
@@ -341,7 +347,10 @@
           <span class="code-tag">/&gt;</span>
         </div>
       </div>
+      </div>
+    </section>
 
+    <div class="container">
       <h2 class="section-header">Basic Configurations</h2>
       <div class="demo-grid">
         <!-- Default -->
