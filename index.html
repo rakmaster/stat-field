@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StatField - Dice-Powered Stat Input for Vue 3</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+
+    /* VStatField Component Styles */
+    .v-stat-field {
+      --stat-primary-color: #667eea;
+      --stat-primary-hover: #5568d3;
+      --stat-error-color: #ff4757;
+      --stat-border-color: #ddd;
+      --stat-border-radius: 4px;
+      --stat-text-color: #333;
+      --stat-bg-color: white;
+      --stat-label-color: #666;
+      --stat-hint-color: #999;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin-bottom: 16px;
+    }
+    .stat-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--stat-label-color);
+      margin-bottom: 6px;
+    }
+    .required-indicator {
+      color: var(--stat-error-color);
+      margin-left: 2px;
+    }
+    .stat-input-group {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .stat-input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 2px solid var(--stat-border-color);
+      border-radius: var(--stat-border-radius);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--stat-text-color);
+      background: var(--stat-bg-color);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: default;
+      text-align: center;
+    }
+    .stat-input:focus {
+      outline: none;
+      border-color: var(--stat-primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .stat-input:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: #f5f5f5;
+    }
+    .stat-roll-btn {
+      padding: 10px 16px;
+      background: var(--stat-primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--stat-border-radius);
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+      min-width: 48px;
+    }
+    .stat-roll-btn:hover:not(:disabled) {
+      background: var(--stat-primary-hover);
+      transform: translateY(-1px);
+    }
+    .stat-roll-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    .stat-roll-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .stat-hint {
+      font-size: 12px;
+      color: var(--stat-hint-color);
+      margin-top: 4px;
+    }
+    .stat-error {
+      font-size: 12px;
+      color: var(--stat-error-color);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .stat-details {
+      font-size: 12px;
+      color: var(--stat-hint-color);
+      margin-top: 4px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">🎲 StatField</div>
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="component.html">Component</a>
+        <a href="https://github.com/rakmaster/stat-field" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <div id="app">
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="container">
+        <h1>🎲 StatField</h1>
+        <p class="hero-subtitle">A stat generation input field based on DiceRoller</p>
+        <div class="hero-buttons">
+          <a href="#install" class="btn btn-primary">Get Started</a>
+          <a href="https://github.com/rakmaster/stat-field" class="btn btn-secondary">View on GitHub</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Demo Section -->
+    <section class="demo-section">
+      <div class="container">
+        <h2>Try It Out</h2>
+        <p class="section-subtitle">Roll for a character stat right here in your browser</p>
+        <div class="demo-card">
+          <v-stat-field
+            v-model="demoValue"
+            die="3d6"
+            label="Strength"
+            show-details
+          ></v-stat-field>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <h2>Features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🎲</div>
+            <h3>Dice-Only Input</h3>
+            <p>Values come exclusively from dice rolls, not manual entry</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Smart Validation</h3>
+            <p>Min/max ranges with automatic validation and error messages</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3>Themeable</h3>
+            <p>CSS variables for complete color customization</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Roll Details</h3>
+            <p>Optional display of individual die results and modifiers</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎭</div>
+            <h3>All Dice Types</h3>
+            <p>Support for d4, d6, d8, d10, d12, d20, and d100</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Vuetify-Style Events</h3>
+            <p>Full event system compatible with Vuetify patterns</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔢</div>
+            <h3>Modifiers</h3>
+            <p>Support for +/- modifiers (e.g., "2d6+3")</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3>Responsive</h3>
+            <p>Compact and inline variants for any layout</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎮</div>
+            <h3>Perfect for RPGs</h3>
+            <p>Built specifically for D&D, Pathfinder, and tabletop games</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="install" class="install-section">
+      <div class="container">
+        <h2>Installation</h2>
+        
+        <div class="install-option">
+          <h3>Vue Component</h3>
+          <p>Ready-to-use Vue 3 component for character stat generation</p>
+          <pre><code>npm install @stat-field/vue</code></pre>
+          
+          <div class="code-example">
+            <h4>Usage:</h4>
+            <pre><code>&lt;template&gt;
+  &lt;VStatField
+    v-model="strength"
+    die="3d6"
+    label="Strength"
+    :min="3"
+    :max="18"
+    show-details
+  /&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref } from 'vue';
+import { VStatField } from '@stat-field/vue';
+
+const strength = ref(null);
+&lt;/script&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Explore More Section -->
+    <section class="examples-section">
+      <div class="container">
+        <h2>Explore More</h2>
+        <div class="examples-grid">
+          <a href="component.html" class="example-card">
+            <div class="example-icon">📚</div>
+            <h3>Interactive Documentation</h3>
+            <p>Comprehensive guide with live examples and API reference</p>
+            <span class="example-link">Explore Component →</span>
+          </a>
+          <a href="component.html#api" class="example-card">
+            <div class="example-icon">🔧</div>
+            <h3>API Reference</h3>
+            <p>Complete props, events, and CSS variables documentation</p>
+            <span class="example-link">View API →</span>
+          </a>
+          <a href="https://github.com/rakmaster/stat-field" target="_blank" class="example-card">
+            <div class="example-icon">💻</div>
+            <h3>Source Code</h3>
+            <p>View the source, report issues, or contribute on GitHub</p>
+            <span class="example-link">View on GitHub →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <p>Built with ❤️ for the RPG and gaming community</p>
+        <p>
+          <a href="https://github.com/rakmaster/stat-field">GitHub</a> •
+          <a href="https://github.com/rakmaster/stat-field/issues">Issues</a> •
+          <a href="mailto:logan@phantasea.net">Contact</a>
+        </p>
+        <p style="font-size: 12px; opacity: 0.7; margin-top: 12px;">
+          Component design inspired by the fantastic work of the
+          <a href="https://vuetifyjs.com" target="_blank" style="color: inherit;">Vuetify team</a>
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module">
+    const { createApp } = Vue;
+
+    // Inline dice roller
+    function rollDetailed(notation) {
+      const match = notation.match(/^(\d+)d(\d+)([+-]\d+)?$/);
+      if (!match) throw new Error('Invalid notation');
+      
+      const count = parseInt(match[1]);
+      const sides = parseInt(match[2]);
+      const modifier = match[3] ? parseInt(match[3]) : 0;
+      
+      const rolls = [];
+      for (let i = 0; i < count; i++) {
+        rolls.push(Math.floor(Math.random() * sides) + 1);
+      }
+      
+      const total = rolls.reduce((sum, r) => sum + r, 0) + modifier;
+      
+      return { notation, rolls, modifier, total };
+    }
+
+    // VStatField component
+    const VStatField = {
+      template: `
+        <div class="v-stat-field">
+          <label v-if="label" class="stat-label">
+            {{ label }}
+            <span v-if="required" class="required-indicator">*</span>
+          </label>
+          <div class="stat-input-group">
+            <input
+              type="number"
+              :value="modelValue"
+              :placeholder="placeholder"
+              :min="min"
+              :max="max"
+              :disabled="disabled"
+              readonly
+              class="stat-input"
+              @focus="$emit('focus', $event)"
+              @blur="$emit('blur', $event)"
+              @click="$emit('click', $event)"
+            />
+            <button
+              @click="handleRollClick"
+              :disabled="disabled || loading"
+              class="stat-roll-btn"
+              type="button"
+            >
+              <span v-if="loading">⏳</span>
+              <span v-else>{{ diceIcons }}</span>
+            </button>
+          </div>
+          <div v-if="hint && !error" class="stat-hint">{{ hint }}</div>
+          <div v-if="error" class="stat-error">{{ error }}</div>
+          <div v-if="showDetails && lastRoll" class="stat-details">
+            {{ die }}: [{{ lastRoll.rolls.join(', ') }}]
+            <span v-if="lastRoll.modifier !== 0">
+              {{ lastRoll.modifier > 0 ? '+' : '' }}{{ lastRoll.modifier }}
+            </span>
+            = {{ lastRoll.total }}
+          </div>
+        </div>
+      `,
+      props: {
+        modelValue: { type: [Number, null], default: null },
+        die: { type: String, required: true },
+        label: { type: String, default: '' },
+        placeholder: { type: String, default: '' },
+        hint: { type: String, default: '' },
+        min: { type: Number, default: undefined },
+        max: { type: Number, default: undefined },
+        required: { type: Boolean, default: false },
+        showDetails: { type: Boolean, default: false },
+        disabled: { type: Boolean, default: false },
+        loading: { type: Boolean, default: false }
+      },
+      emits: ['update:modelValue', 'roll', 'input', 'change', 'focus', 'blur', 'click', 'click:append', 'error', 'validation-error'],
+      data() {
+        return {
+          error: null,
+          lastRoll: null
+        };
+      },
+      computed: {
+        diceIcons() {
+          const match = this.die.match(/^(\d+)d(\d+)/);
+          if (!match) return '🎲';
+          
+          const count = parseInt(match[1]);
+          const sides = parseInt(match[2]);
+          
+          const dieEmoji = {
+            4: '🔺', 6: '⚄', 8: '🔷', 10: '🔟',
+            12: '🌟', 20: '🎲', 100: '💯'
+          };
+          
+          const icon = dieEmoji[sides] || '🎲';
+          return icon.repeat(Math.min(count, 3)) + (count > 3 ? '…' : '');
+        }
+      },
+      methods: {
+        handleRoll() {
+          try {
+            this.error = null;
+            const result = rollDetailed(this.die);
+            this.lastRoll = result;
+            
+            if (this.min !== undefined && result.total < this.min) {
+              this.error = `Value must be at least ${this.min}`;
+              this.$emit('validation-error', this.error);
+            } else if (this.max !== undefined && result.total > this.max) {
+              this.error = `Value must be at most ${this.max}`;
+              this.$emit('validation-error', this.error);
+            } else {
+              this.$emit('change', result.total);
+            }
+            
+            this.$emit('update:modelValue', result.total);
+            this.$emit('input', result.total);
+            this.$emit('roll', result);
+          } catch (err) {
+            this.error = err.message;
+            this.$emit('error', err);
+          }
+        },
+        handleRollClick(event) {
+          this.$emit('click:append', event);
+          this.handleRoll();
+        }
+      }
+    };
+
+    createApp({
+      components: {
+        'v-stat-field': VStatField
+      },
+      data() {
+        return {
+          demoValue: null
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

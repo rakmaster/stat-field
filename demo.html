@@ -270,9 +270,31 @@
   </div>
 
   <script type="module">
-    import { rollDetailed } from 'https://cdn.jsdelivr.net/npm/@dice-roller/core@1.0.0/+esm';
-
     const { createApp } = Vue;
+
+    // Simple inline dice roller (no external dependencies)
+    function rollDetailed(notation) {
+      const match = notation.match(/^(\d+)d(\d+)([+-]\d+)?$/);
+      if (!match) throw new Error('Invalid notation');
+      
+      const count = parseInt(match[1]);
+      const sides = parseInt(match[2]);
+      const modifier = match[3] ? parseInt(match[3]) : 0;
+      
+      const rolls = [];
+      for (let i = 0; i < count; i++) {
+        rolls.push(Math.floor(Math.random() * sides) + 1);
+      }
+      
+      const total = rolls.reduce((sum, r) => sum + r, 0) + modifier;
+      
+      return {
+        notation,
+        rolls,
+        modifier,
+        total
+      };
+    }
 
     // Inline VStatField component for demo
     const VStatField = {
